@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Timer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+ 
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100%;
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 10%;
+    }
+
+    .timer {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Add CSS for countdown animation */
+    @keyframes countdown {
+      0% {
+        color: #fff;
+      }
+      50% {
+        color: yellow;
+      }
+      100% {
+        color: red;
+      }
+    }
+
+    .countdown-animation {
+      animation: countdown 2s linear infinite;
+    }
+
+    .baloo-2-text {
+      font-family: "Baloo 2", sans-serif;
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    /* Responsive styles */
+    @media screen and (max-width: 768px) {
+      .container {
+        margin-top: 20%;
+      }
+
+      .timer {
+        font-size: 24px;
+      }
+
+      .button {
+        font-size: 16px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="w-full h-screen flex justify-center bg-cover bg-[url('https://github.com/rishit-roars/stopwatch/blob/3927f0cb394835d4973ddddba08414ec494e013e/bg.png')] items-center">
+    <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="true" data-aos-anchor-placement="top-center" class="bg-[rgba(0,0,0,0.2)] drop-shadow-xl  shadow-xl w-[80%] lg:w-[50%] md:w-[70%] sm:w-[90%] rounded-xl">
+      <div class="container z-100">
+        <div class="w-[100%] h-[100px] items-center flex justify-center">
+          <div class="bg-[rgba(255,255,255,0.2)] h-[100%] flex items-center rounded-xl justify-center text-center timer baloo-2-text text-white w-[60%]">
+            00:00:00
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="button baloo-2-text w-50 text-white" id="start">
+            <img width="30" height="30" src="https://img.icons8.com/3d-fluency/100/circled-play.png" alt="circled-play">
+          </button>
+          <button class="button baloo-2-text text-white" id="stop">
+            <img width="30" height="30" src="https://img.icons8.com/3d-fluency/100/no-entry.png" alt="no-entry">
+          </button>
+          <button class="button baloo-2-text text-white" id="reset">
+            <img width="30" height="30" src="https://img.icons8.com/3d-fluency/188/restart--v1.png" alt="restart--v1">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script>
+      let timerInterval;
+      let startTime;
+      let elapsedTime = 0;
+      let isRunning = false;
+
+      function startTimer() {
+        if (!isRunning) {
+          startTime = Date.now() - elapsedTime;
+
+          timerInterval = setInterval(updateTimer, 10);
+          isRunning = true;
+        }
+      }
+
+      function stopTimer() {
+        if (isRunning) {
+          clearInterval(timerInterval);
+          isRunning = false;
+        }
+      }
+
+      function resetTimer() {
+        stopTimer();
+        elapsedTime = 0;
+        startTime = Date.now();
+        updateTimer();
+      }
+
+      function updateTimer() {
+        const currentTime = Date.now();
+        elapsedTime = currentTime - startTime;
+        const formattedTime = formatTime(elapsedTime);
+        const timerElement = document.querySelector(".timer");
+
+        if (elapsedTime < 10000) {
+          timerElement.classList.add("countdown-animation");
+        } else {
+          timerElement.classList.remove("countdown-animation");
+        }
+
+        timerElement.textContent = formattedTime;
+      }
+
+      function formatTime(time) {
+        const milliseconds = Math.floor((time % 1000) / 10);
+        const seconds = Math.floor((time / 1000) % 60);
+        const minutes = Math.floor((time / (1000 * 60)) % 60);
+        const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+
+        return `${padZero(hours)}:${padZero(minutes)}:${padZero(
+          seconds
+        )}.${padZero(milliseconds)}`;
+      }
+
+      function padZero(number) {
+        return number.toString().padStart(2, "0");
+      }
+
+      document.getElementById("start").addEventListener("click", startTimer);
+      document.getElementById("stop").addEventListener("click", stopTimer);
+      document.getElementById("reset").addEventListener("click", resetTimer);
+    </script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
