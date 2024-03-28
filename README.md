@@ -32,7 +32,7 @@ This repository contains a simple stopwatch web application built using HTML, Ta
 - **AOS (Animate On Scroll):** JavaScript library for smooth animations.
 
 ## Credits
-This project was created by Arya . Feel free to modify and distribute as needed.
+This project was created by Rishit Chowdhury . Feel free to modify and distribute as needed.
 
 ## License
 
